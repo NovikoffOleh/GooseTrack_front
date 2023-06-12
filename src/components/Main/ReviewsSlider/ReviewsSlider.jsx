@@ -14,8 +14,8 @@ import {
   SliderRight,
   Wrapper,
 } from './ReviewsSlider.styled';
-import olena from 'images/others/mobile/review-olena.png';
-import alexander from 'images/others/mobile/review-alexander.png';
+import olena from 'images/others/mobile/images-2.jpg';
+import alexander from 'images/others/mobile/images-3.jpg';
 import { ReactComponent as Star } from 'images/svg/rating-star.svg';
 
 export const ReviewsSlider = () => {
@@ -26,9 +26,9 @@ export const ReviewsSlider = () => {
         <ReviewsList>
           <ReviewsItem>
             <AuthorTop>
-              <AuthorPhoto src={olena} alt="Olena Doe"></AuthorPhoto>
+              <AuthorPhoto src={olena} alt="Олена Павленко"></AuthorPhoto>
               <AuthorTopRight>
-                <AuthorTitle>Olena Doe</AuthorTitle>
+                <AuthorTitle>Олена Павленко</AuthorTitle>
                 <AuthorRating>
                   <Star width={14} height={14} fill="#CEC9C1" />
                   <Star width={14} height={14} fill="#FFAC33" />
@@ -47,10 +47,10 @@ export const ReviewsSlider = () => {
             <AuthorTop>
               <AuthorPhoto
                 src={alexander}
-                alt="Alexander Hubbard "
+                alt="Олександр Руденко "
               ></AuthorPhoto>
               <AuthorTopRight>
-                <AuthorTitle>Alexander Hubbard </AuthorTitle>
+                <AuthorTitle>Григорій Руденко </AuthorTitle>
                 <AuthorRating>
                   <Star width={14} height={14} fill="#CEC9C1" />
                   <Star width={14} height={14} fill="#FFAC33" />
