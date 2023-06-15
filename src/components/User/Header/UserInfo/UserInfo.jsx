@@ -1,4 +1,4 @@
-import { selectIsIsLoadingUser, selectUser } from 'redux/auth/selectors';
+import { selectIsRefreshingUser, selectUser } from 'redux/auth/selectors';
 import {
   StyledLink,
   StyledName,
@@ -9,24 +9,21 @@ import {
 import { useSelector } from 'react-redux';
 
 export const UserInfo = () => {
-  const {
-    user: { name },
-    userPhoto,
-  } = useSelector(selectUser);
-  const isLoading = useSelector(selectIsIsLoadingUser);
+  const { user} = useSelector(selectUser);
+  const isLoading = useSelector(selectIsRefreshingUser);
 
-  const firstLetter = name.trim().slice(0, 1).toUpperCase();
+  const firstLetter = (user?.username !== null) ? user.username.trim().slice(0, 1).toUpperCase() : '';
 
   return (
-    <StyledLink to="/account">
-      <StyledName>{name}</StyledName>
+    <StyledLink to='/account'>
+      <StyledName>{user ? user.username : ''}</StyledName>
       <StyledAvatarContainer>
         {isLoading ? (
           <StyledLetter>{firstLetter}</StyledLetter>
-        ) : !userPhoto ? (
+        ) : !user?.avatarURL ? (
           <StyledLetter>{firstLetter}</StyledLetter>
         ) : (
-          <StyledAvatar src={userPhoto} alt="Avatar" />
+          <StyledAvatar src={user.avatarURL} alt='Avatar' />
         )}
       </StyledAvatarContainer>
     </StyledLink>

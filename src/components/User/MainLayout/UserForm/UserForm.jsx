@@ -1,58 +1,43 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Formik } from 'formik';
-import * as Yup from 'yup';
 import { selectUser } from 'redux/auth/selectors';
-import { refreshUser, updateUser } from 'redux/auth/operations'
-import { patterns } from 'helpers';
+import { refreshUser, updateUser } from 'redux/auth/operations';
+import { validateUserForm } from 'helpers/UserFormValidation';
+import { UserField, BirthdayField } from '../UserField/UserField';
+import { notification, useNotification } from 'helpers';
 
+import { NewPasswordModal } from './NewPasswordModal/index.js';
 
 import {
   Wrapper,
   User,
   FormUser,
   BlockInput,
-  LabelInput,
-  Input,
-  StyledDatePicker,
   InputFile,
   AddBtn,
   LabelImg,
   ContainerImg,
   ImgAvatar,
   SvgAvatar,
-  BtnSubmit,
-  StyledErrorMessage,
-  DatePickerWrap,
   IconUser,
-  InputContainer,
+  UserName,
+  ChangePasswordBtn,
 } from './UserForm.styled';
-
-const userSchema = Yup.object().shape({
-  name: Yup.string()
-    .matches(patterns.namePattern, 'Name should contain only letters')
-    .min(2, 'Must be at least 2 characters long!')
-    .max(16, 'Must be up to 16 characters long!')
-    .required('Name is required field'),
-     
-  birthday: Yup.date().nullable(),
-  email: Yup.string()
-    .email('Invalid email format')
-    .matches(patterns.emailPattern)
-    .required('Email is required'),
-  
-  phone: Yup.string()
-    .matches(patterns.phonePattern, 'Enter your phone number in format 38 (011) 111 11 11'),
-  skype: Yup.string().max(16),
- 
- });
-
+import { MainBtn } from '../../../../utils/Buttons/MainButton.styled';
 
 export const UserForm = () => {
-  const userInfo = useSelector(selectUser);
+  const { user } = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [avatarUrl, setAvatarUrl] = useState(null);
+  const [nameValid, setNameValid] = useState(null);
+  const [phoneValid, setPhoneValid] = useState(null);
+  const [emailValid, setEmailValid] = useState(null);
+  const [birthdayValid, setBirthdayValid] = useState(null);
+  const [skypeValid, setSkypeValid] = useState(null);
+  const [isShowModal, setIsShowModal] = useState(false);
+
+  const [avatarURL, setAvatarURL] = useState(null);
   const [isUpdateForm, setIsUpdateForm] = useState(null);
   const [newBirthday, setNewBirthday] = useState(null);
   const [isOpenDate, setIsOpenDate] = useState(false);
@@ -62,7 +47,10 @@ export const UserForm = () => {
     phone: '',
     skype: '',
     birthday: '',
+    avatarURL: '',
   });
+
+  const toast = useNotification();
 
   useEffect(() => {
     const saveFormData = localStorage.getItem('formData');
@@ -86,191 +74,190 @@ export const UserForm = () => {
     setIsOpenDate(false);
   };
 
+  const onCloseModal = () => setIsShowModal(false);
+
   return (
     <Wrapper>
       <Formik
         enableReinitialize={true}
         initialValues={{
-          name: formData.name || userInfo?.name || '',
-          email: formData.email || userInfo?.email || '',
-          phone: formData.phone || userInfo?.phone || '',
-          skype: formData.skype || userInfo?.skype || '',
+          name: formData.name || user?.username || '',
+          email: formData.email || user?.email || '',
+          phone: formData.phone || user?.phone || '',
+          skype: formData.skype || user?.skype || '',
           birthday:
-            newBirthday || formData.birthday || userInfo?.birthday
-              ? new Date(newBirthday || formData.birthday || userInfo?.birthday)
+            newBirthday || formData.birthday || user?.birthday
+              ? new Date(newBirthday || formData.birthday || user?.birthday)
               : new Date(),
+          avatarURL: formData.avatarURL || user?.avatarURL || '',
         }}
         onSubmit={async values => {
-          const formData = new FormData();
-          formData.append('name', values.name);
-          formData.append('email', values.email);
-          if (values.phone) {
-            formData.append('phone', values.phone);
+          try {
+            const validationResponse = await validateUserForm(values);
+
+            setEmailValid(validationResponse.email);
+            setNameValid(validationResponse.name);
+            setPhoneValid(validationResponse.phone);
+            setSkypeValid(validationResponse.skype);
+            setBirthdayValid(validationResponse.birthday);
+            const checkValidResult = Object.values(validationResponse).every(
+              item => item.valid
+            );
+
+            if (checkValidResult) {
+              const formData = new FormData();
+              formData.append('username', values.name);
+              formData.append('email', values.email);
+              if (values.phone) {
+                formData.append('phone', values.phone);
+              }
+              if (values.skype) {
+                formData.append('skype', values.skype);
+              }
+              formData.append('birthday', values.birthday);
+              if (avatarURL) {
+                formData.append('avatarURL', avatarURL);
+              }
+
+              dispatch(updateUser(formData));
+
+              notification(
+                toast,
+                'success',
+                'Your profile changed successfully.'
+              );
+            }
+          } catch {
+            notification(toast, 'fail', 'Profile change error.');
           }
-          if (values.skype) {
-            formData.append('skype', values.skype);
-          }
-          formData.append('birthday', values.birthday);
-          if (avatarUrl) {
-            formData.append('avatarUrl', avatarUrl);
-          }
-          await dispatch(updateUser(formData));
         }}
-        validationSchema={userSchema}
       >
         {({
           values,
           handleSubmit,
           handleChange,
           handleBlur,
+          dirty,
+          setFieldValue,
         }) => (
           <FormUser autoComplete="off" onSubmit={handleSubmit}>
-            
             <ContainerImg>
-              {avatarUrl ? (
-                <ImgAvatar
-                  src={URL.createObjectURL(avatarUrl)}
-                  alt="avatar"
-                />
-              ) : userInfo?.userImgUrl ? (
-                <ImgAvatar src={userInfo.avatar} alt="avatar" />
+              {avatarURL ? (
+                <ImgAvatar src={URL.createObjectURL(avatarURL)} alt="avatar" />
+              ) : user?.avatarURL ? (
+                <ImgAvatar src={user.avatarURL} alt="avatar" />
               ) : (
                 <SvgAvatar>
-                <IconUser/>
+                  <IconUser />
                 </SvgAvatar>
               )}
-              <LabelImg htmlFor="avatarUrl">
+              <LabelImg htmlFor="avatarURL">
                 <AddBtn />
                 <InputFile
-                  id="avatarUrl"
+                  id="avatarURL"
                   type="file"
-                  onChange={event => setAvatarUrl(event.target.files[0])}
+                  onChange={e => {
+                    setFieldValue('avatarURL', e);
+                    setAvatarURL(e.target.files[0]);
+                  }}
                   accept="image/*,.png,.jpg,.gif,.web"
-                  name="avatarUrl"
-                ></InputFile>
+                  name="avatarURL"
+                />
               </LabelImg>
             </ContainerImg>
 
-
-            <h2>{userInfo?.name} </h2>
+            <UserName>{user?.username ? user?.username : ''} </UserName>
             <User>User</User>
+
             <BlockInput>
-              <InputContainer>
-            <LabelInput htmlFor="name" >
-                <p>User Name</p>
-                </LabelInput>
-                   
-                  <Input
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Your Name"
-                  />
-                  <div style={{ display: "flex", flexDirection: "column", color: "red"}
-                                    }>
-                  <StyledErrorMessage name="name"  />
-                      </div>
-                </InputContainer>
-              
-             <InputContainer>
-                <LabelInput htmlFor="phone">
-                  <p>Phone</p>
-              </LabelInput>
-                          <Input
-                            type="tel"
-                            name="phone"
-                            id="phone"
-                            value={values.phone ? values.phone : ''}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            placeholder="38 (000) 000 00 00"
-                          />
-                <div style={{ display: "flex", flexDirection: "column", color: "red"}
-                                    }>
-                          <StyledErrorMessage name="phone" />
-                        </div>
-                        
-                      </InputContainer>
-                    
-                     <InputContainer>
-                <LabelInput htmlFor="birthday">
-               <p>Birthday</p>
-                </LabelInput>
-                <DatePickerWrap>
-                  <StyledDatePicker
-                    type="date"
-                    name="birthday"
-                    id="birthday"
-                    input={true}
-                    maxDate={new Date()}
-                    selected={values.birthday}
-                    onChange={data => {
-                      setNewBirthday(data);
-                      handleDatePicker();
-                    }}
-                    placeholder="Birthday"
-                    dateFormat="yyyy/MM/dd"
-                    open={isOpenDate}
-                    onClickOutside={() => setIsOpenDate(false)}
-                    onFocus={() => setIsOpenDate(true)}
-                    showYearDropdown
-                    scrollableYearDropdown
-                  />
-                  
-                  <StyledErrorMessage name="birthday" />
-                  
-                  </DatePickerWrap>
-                  </InputContainer>
-              
-            <InputContainer>
-              <LabelInput htmlFor="skype">
-                  <p>Skype</p>
-                </LabelInput>
-                    <Input
-                      type="text"
-                      name="skype"
-                      id="skype"
-                      placeholder="Add a skype number"
-                      value={values.skype ? values.skype : ''}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                <div style={{ display: "flex", flexDirection: "column", color: "red"}
-                  }>
-                    <StyledErrorMessage name="skype" />
-                  </div>
-             </InputContainer>
-              
-              <InputContainer>
-              <LabelInput htmlFor="email">
-                  <p>Email</p>
-                  </LabelInput>
-                    <Input
-                      type="email"
-                      name="email"
-                      id="email"
-                      placeholder="Email"
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />
-                <div style={{ display: "flex", flexDirection: "column", color: "red"}
-                  }>
-                    <StyledErrorMessage name="email" />
-                  </div>
-                  </InputContainer>
-                
+              <UserField
+                name={'Name'}
+                lableName={'Name'}
+                value={values.name}
+                type={'name'}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                valid={nameValid?.valid}
+                placeholder="Your Name"
+                errorMessage={nameValid?.error}
+              />
+
+              <UserField
+                name={'Phone'}
+                lableName={'Phone'}
+                value={values.phone}
+                type={'tel'}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                valid={phoneValid?.valid}
+                placeholder="+38"
+                errorMessage={phoneValid?.error}
+              />
+
+              <BirthdayField
+                name={'Birthday'}
+                lableName={'Birthday'}
+                value={values.birthday}
+                type={'date'}
+                input={true}
+                maxDate={new Date()}
+                selected={values.birthday}
+                onChange={e => {
+                  setFieldValue('birthday', e);
+                  setNewBirthday();
+                  handleDatePicker();
+                }}
+                placeholder={'Birthday'}
+                dateFormat="yyyy/MM/dd"
+                open={isOpenDate}
+                onClickOutside={() => setIsOpenDate(false)}
+                onFocus={() => setIsOpenDate(true)}
+                valid={birthdayValid?.valid}
+                errorMessage={birthdayValid?.error}
+              />
+
+              <UserField
+                name={'Skype'}
+                lableName={'Skype'}
+                value={values.skype}
+                type={'text'}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                valid={skypeValid?.valid}
+                placeholder="Add a skype number"
+                errorMessage={skypeValid?.error}
+              />
+
+              <UserField
+                name={'Email'}
+                lableName={'Email'}
+                value={values.email}
+                type={'text'}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                valid={emailValid?.valid}
+                placeholder="Email"
+                errorMessage={emailValid?.error}
+              />
             </BlockInput>
-            <BtnSubmit type="submit">Save changes</BtnSubmit>
+            <MainBtn type={'submit'} disabled={!dirty} padding="50">
+              Save changes
+            </MainBtn>
+            <ChangePasswordBtn
+              type={'button'}
+              onClick={() => {
+                setIsShowModal(true);
+              }}
+              padding="0"
+            >
+              Change password
+            </ChangePasswordBtn>
+            {isShowModal && <NewPasswordModal onCloseModal={onCloseModal} />}
           </FormUser>
         )}
       </Formik>
     </Wrapper>
   );
 };
-
 
 

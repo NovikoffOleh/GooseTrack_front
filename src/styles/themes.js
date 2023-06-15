@@ -1,13 +1,17 @@
 // !поки що тільки світла тема, коментарі потім всі поприбираю
 export const themes = Object.freeze({
   colors: {
-    background: '#EAEAEA',
-    backgroundSidebar: '#FFFFFFF',
+    background: '#F7F6F9',
+    backgroundSidebar: '#FFFFFF',
     backgroundUserbar: '#F7F6F9',
     backgroundUserForm: '#FFFFFF',
+    backgroundModalTodo: '#FFFFFF',
     backgroundTextArea: '#F6F6F6',
+    borderInTextArea: 'transparent',
     textAndIconTodo: '#111111',
     borderTableAndInput: '#DCE3E550',
+    borderInputUserForm: '#11111110',
+    borderModaAddToDo: '#DCE3E580',
     starDisable: '#CEC9C1', //!сірий зірок не активних
     ligthBlue: '#E3F3FF',
     darkBlue: '#CAE8FF',
@@ -19,9 +23,19 @@ export const themes = Object.freeze({
     reviewsBackBlue: '#E3F3FF50',
     iconPaginationActive: '#111111',
     scrollSwitchVertical: '#34343420',
-    lineSwitchVertical: '#FFFFFFF',
+    labelInForm: '#34343480',
+    lineSwitchVertical: '#FFFFFF',
+    textMonthDayBtn: '#3E85F3',
     loaderWrapper: '#343434', //!він також текст у календарі чорний
     loaderCircle: ['#FFFFFF', '#3E85F3', '#2B78EF', '#DCE3E560', '#FFFFFF'],
+    canceledInTodo: '#EFEFEF', //!фон не активних елементів і кнопки Cancel
+    textCancelBtn: '#343434',
+    sidebarTitle: 'rgba(52, 52, 52, 0.5)',
+    userNavItem: 'rgba(52, 52, 52, 0.5)',
+    activeUserNavItem: '#3E85F3',
+    backgroundActiveUserNavItem: '#E3F3FF',
+    userNavIcon: 'rgba(52, 52, 52, 0.5)',
+    activeUserNavIcon: '#3E85F3',
 
     // !не міняються при зміні теми !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     black: '#343434',
@@ -30,10 +44,9 @@ export const themes = Object.freeze({
     hovered: '#2B78EF',
     accentText: '#3E85F320',
     starActive: '#FFAC33', //!жовтий зірок рейтингу
-
     backgroundAuth: '#DCEBF7', //!фоновий колір пейджа регістраціі та логінізаціі
-
-    lowTask: '#72C2F8', //!найменший пріоритет в тасках і радіокнопки неактивні
+    lowTask: '#72C2F8', //!найменший пріоритет в тасках
+    lowTaskRadio: '#72C2F850', //!кільце радіокнопки неактивні
     mediumTask: '#F3B249', //!середній пріоритет в тасках і жовтий текст в календарі і радіокнопки неактивні
     highTask: '#EA3D65', //!найвищщий пріоритет в тасках і рожевий текст в календарі і радіокнопки неактивні
     blueInNotes: '#CEEEFD', //!голуба лейба-фон в календарі
@@ -45,11 +58,13 @@ export const themes = Object.freeze({
     failed: '#E74A3B', //!неуспішний колір бордера в інпуті авторизаціі
     saccess: '#3CBC81', //!успішний колір бордера в інпуті авторизаціі
     canceled: '#E5EDFA', //!фон не активних елементів і кнопки Cancel
-    canceledInTodo: '#EFEFEF', //!фон не активних елементів і кнопки Cancel
+    canceledNoChanged: '#E5EDFA', //!фон не активних елементів і кнопки Cancel
     textCancelBtnIntodo: '#111111',
-    textCancelBtn: '#343434',
+    borderDefaultColor: 'rgba(17, 17, 17, 0.15)',
+    borderUserForm: 'rgba(17, 17, 17, 0.15)',
   },
   fontSizes: {
+    micro: '10px',
     xs: '12px',
     s: '14px',
     m: '16px',
@@ -76,7 +91,7 @@ export const themes = Object.freeze({
   },
   animations: {
     cubicBezier: 'cubic-bezier(0, 0.110, 0.35, 2)',
-    duration: '25000ms',
+    duration: '250ms',
   },
   shadows: {
     authHeading:
@@ -89,10 +104,15 @@ export const themes = Object.freeze({
 export const dark = Object.freeze({
   colors: {
     background: '#171820',
+    backgroundModalTodo: '#171820',
     backgroundSidebar: '#13151A',
     backgroundUserbar: '#181921',
     backgroundUserForm: '#21222C',
     textAndIconTodo: '#FFFFFF',
+    borderModaAddToDo: 'transparent',
+    backgroundTextArea: '#171820',
+    borderInTextArea: '#FFFFFF15',
+    borderInputUserForm: '#FFFFFF15',
     borderTableAndInput: '#FFFFFF15',
     starDisable: '#353647',
     ligthBlue: '#21222C',
@@ -107,14 +127,41 @@ export const dark = Object.freeze({
     lineSwitchVertical: '#2D3037',
     lineHorizontScrollInTodo: '#2D3037',
     canceled: '#21222C',
+    canceledNoChanged: '#E5EDFA',
     canceledInTodo: '#EFEFEF',
     textCancelBtn: '#FFFFFF',
+    textMonthDayBtn: '#FFFFFF',
     loaderWrapper: '#FFFFFF',
     loaderCircle: ['#FFFFFF', '#3E85F3', '#2B78EF', '#DCE3E560', '#FFFFFF'],
+    labelInForm: '#FAFAFA30',
+    sidebarTitle: 'rgba(250, 250, 250, 0.3)',
+    userNavItem: '#FFFFFF',
+    activeUserNavItem: '#FFFFFF',
+    backgroundActiveUserNavItem: '#3E85F3',
+    userNavIcon: '#FFFFFF',
+    activeUserNavIcon: '#FFFFFF',
     // !не міняються при зміні теми !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     black: '#343434',
     white: '#FFFFFF',
-    accent: '#3E85F3',
+    accent: '#3E85F3', //!основні кнопки, активні елементи, іконки, фон календаря
+    hovered: '#2B78EF',
+    accentText: '#3E85F320',
+    starActive: '#FFAC33', //!жовтий зірок рейтингу
+    backgroundAuth: '#DCEBF7', //!фоновий колір пейджа регістраціі та логінізаціі
+    lowTask: '#72C2F8', //!найменший пріоритет в тасках і радіокнопки неактивні
+    mediumTask: '#F3B249', //!середній пріоритет в тасках і жовтий текст в календарі і радіокнопки неактивні
+    highTask: '#EA3D65', //!найвищщий пріоритет в тасках і рожевий текст в календарі і радіокнопки неактивні
+    blueInNotes: '#CEEEFD', //!голуба лейба-фон в календарі
+    yellowInNotes: '#FCF0D4', //!жовта лейба-фон в календарі
+    pinkInNotes: '#FFD2DD', //!рожева лейба-фон в календарі
+    borderInput: '#DCE3E560', //!неактивний колір бордера в інпуті авторизаціі
+    placegolderAuth: '#DCE3E5', //! колір плейсхолдера в інпуті авторизаціі
+    borderInputActive: '#11111110', //!активний колір бордера в інпуті авторизаціі
+    failed: '#E74A3B', //!неуспішний колір бордера в інпуті авторизаціі
+    saccess: '#3CBC81', //!успішний колір бордера в інпуті авторизаціі
+    textCancelBtnIntodo: '#111111',
+    borderDefaultColor: 'rgba(17, 17, 17, 0.15)',
+    borderUserForm: 'rgba(255, 255, 255, 0.15)',
   },
   fontSizes: {
     xs: '12px',
@@ -143,7 +190,7 @@ export const dark = Object.freeze({
   },
   animations: {
     cubicBezier: 'cubic-bezier(0, 0.110, 0.35, 2);',
-    duration: '25000ms',
+    duration: '250ms',
   },
   shadows: {
     authHeading:

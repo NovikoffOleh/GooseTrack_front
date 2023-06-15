@@ -1,11 +1,15 @@
 import styled from '@emotion/styled';
+import { device } from 'styles/mediaVeriables';
 
 export const SideBarWrap = styled.div`
-  position: relative;
+  position: fixed;
+  z-index: 999;
   box-sizing: border-box;
-  border: 1px solid blue;
   height: 100vh;
   padding: 24px 20px;
+  background-color: ${({ theme }) => theme.colors.backgroundSidebar};
+  border-right: 1px solid rgba(220, 227, 229, 0.5);
+  transform: translateX(-100%);
 
   @media screen and (min-width: 375px) {
     width: 225px;
@@ -15,13 +19,33 @@ export const SideBarWrap = styled.div`
     padding: 24px 32px;
   }
 
+  @media screen and (max-width: 1440px) {
+    transition: transform 350ms ease-in-out;
+    &.openMobalMenu {
+      transform: translateX(0px);
+    }
+  }
+
   @media screen and (min-width: 1440px) {
+    position: relative;
+    transform: translateX(0px);
     padding: 32px 24px;
   }
 `;
 
+export const Overlay = styled.div`
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  background-color: transparent;
+  z-index: 1;
+`;
+
 export const StyledTitle = styled.span`
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textMonthDayBtn};
 
   margin: 0;
   font-family: 'Coolvetica';
@@ -44,16 +68,13 @@ export const StyledTitle = styled.span`
 export const TopWrap = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 122px;
   align-items: center;
+`;
 
-  @media screen and (min-width: 768px) {
-    width: 156px;
-  }
-
-  @media screen and (min-width: 1440px) {
-    width: 201px;
-  }
+export const StyledLogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
 `;
 
 export const SideBarImg = styled.picture`
@@ -68,6 +89,23 @@ export const SideBarImg = styled.picture`
   @media screen and (min-width: 1440px) {
     width: 71px;
     height: 68px;
+  }
+`;
+
+export const StyledCloseButton = styled.button`
+  display: block;
+  width: 33px;
+  height: 33px;
+  transition: all 250ms;
+  stroke: ${({ theme }) => theme.colors.loaderWrapper};
+
+  @media ${device.desktop} {
+    display: none;
+  }
+
+  :hover {
+    stroke: ${({ theme }) => theme.colors.accent};
+    transform: rotate(180deg);
   }
 `;
 

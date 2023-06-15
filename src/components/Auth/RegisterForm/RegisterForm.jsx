@@ -1,91 +1,113 @@
-import { useFormik } from 'formik';
-import { StyledButton, StyledForm, StyledHeading, StyledIcon } from './RegisterForm.styled';
-import { useState } from 'react';
+import { Formik, ErrorMessage } from 'formik';
+import {
+  StyledErrorMessage,
+  StyledForm,
+  StyledHeading,
+} from './RegisterForm.styled';
 import { AuthField } from '../AuthField/AuthField';
-import { validateRegisterForm } from 'helpers/authFieldValidation';
-import { FiLogIn } from 'react-icons/fi';
+import { registerSchema } from 'helpers/authFieldValidation';
 import { useDispatch } from 'react-redux';
 import { register } from '../../../redux/auth/operations';
+import { notification, useNotification } from 'helpers';
+import { useNavigate } from 'react-router-dom';
+import { MainBtn } from '../../../utils/Buttons/MainButton.styled';
+import { CgLogIn } from 'react-icons/cg';
+import { HeadingWrapper, StyledHomeBtn } from '../LoginForm/LoginForm.styled';
+import { AiOutlineLeftCircle } from 'react-icons/ai';
 
 export const RegisterForm = () => {
   const dispatch = useDispatch();
-  const [emailValid, setEmailValid] = useState(null);
-  const [passwordValid, setPasswordValid] = useState(null);
-  const [usernameValid, setUsernameValid] = useState(null);
+  const navigate = useNavigate();
+  const toast = useNotification();
 
-  const onSubmitForm = async (values) => {
+  const onSubmitForm = async (values, { resetForm }) => {
     try {
-      // validation of inputs
-      const validationResponse = await validateRegisterForm(values);
-      setEmailValid(validationResponse.email.valid);
-      setPasswordValid(validationResponse.password.valid);
-      setUsernameValid(validationResponse.username.valid);
-
-  await dispatch(register(values));
-
-      // set loader true
-
-      // API registration
-
-      // set loader false
-
-      // notificate API response
-
-      // redirect /calendar/month
-      formik.resetForm();
+      const { payload } = await dispatch(register(values));
+      if (payload !== {} || typeof payload !== 'string') {
+        notification(
+          toast,
+          'info',
+          'Check your email and approve registration'
+        );
+        navigate('/login');
+        resetForm();
+      }
+      if (typeof payload === 'string') {
+        notification(
+          toast,
+          'fail',
+          'User with this email already exists. Please log in'
+        );
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const formik = useFormik({
-    initialValues: {
-      username: '',
-      password: '',
-      email: '',
-    },
-    onSubmit: values => {
-      onSubmitForm(values);
-    },
-  });
-
   return (
-    <StyledForm onSubmit={formik.handleSubmit}>
-      <StyledHeading>Sign up</StyledHeading>
+    <Formik
+      initialValues={{
+        username: '',
+        email: '',
+        password: '',
+      }}
+      validationSchema={registerSchema}
+      validateOnBlur={false}
+      validateOnChange={false}
+      onSubmit={onSubmitForm}
+    >
+      {({ values, handleSubmit, handleBlur, handleChange }) => (
+        <StyledForm onSubmit={handleSubmit}>
+          <HeadingWrapper>
+            <StyledHeading>Sign Up</StyledHeading>
+            <StyledHomeBtn to="/">
+              Home
+              <AiOutlineLeftCircle
+                style={{
+                  marginLeft: 6,
+                }}
+              />
+            </StyledHomeBtn>
+          </HeadingWrapper>
+          <AuthField
+            name={'username'}
+            lableName={'Name'}
+            value={values.username}
+            type={'text'}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter your name"
+          />
+          <ErrorMessage component={StyledErrorMessage} name="username" />
 
+          <AuthField
+            name={'Email'}
+            lableName={'Email'}
+            value={values.email}
+            type={'email'}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter email"
+          />
+          <ErrorMessage component={StyledErrorMessage} name="email" />
 
-      <AuthField
-        name={'Username'}
-        value={formik.values.username}
-        type={'text'}
-        onChange={formik.handleChange}
-        valid={usernameValid}
-        placeholder='Enter your name'
-      />
+          <AuthField
+            name={'Password'}
+            lableName={'Password'}
+            value={values.password}
+            type={'password'}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            placeholder="Enter password"
+          />
+          <ErrorMessage component={StyledErrorMessage} name="password" />
 
-      <AuthField
-        name={'Email'}
-        value={formik.values.email}
-        type={'email'}
-        onChange={formik.handleChange}
-        valid={emailValid}
-        placeholder='Enter email'
-      />
-
-      <AuthField
-        name={'Password'}
-        value={formik.values.password}
-        type={'text'}
-        onChange={formik.handleChange}
-        valid={passwordValid}
-        placeholder='Enter password'
-      />
-
-      <StyledButton type='submit'>
-        Sign up
-        <StyledIcon><FiLogIn size={17} color='#FFFFFF' /></StyledIcon>
-      </StyledButton>
-
-    </StyledForm>
+          <MainBtn style={{ width: '100%', marginTop: '32px' }} type="submit">
+            Sign Up
+            <CgLogIn style={{ marginLeft: 11, width: 18, height: 18 }} />
+          </MainBtn>
+        </StyledForm>
+      )}
+    </Formik>
   );
 };

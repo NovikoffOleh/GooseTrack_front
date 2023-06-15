@@ -3,33 +3,44 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { LoginForm } from 'components/Auth';
+import { AuthGoogle } from 'components/Main';
 import normalImage from 'images/others/desktop/rocket1x.png';
 import retinaImage from 'images/others/desktop/rocket2x.png';
 import superRetinaImage from 'images/others/desktop/rocket3x.png';
-import { Img} from './LoginPage.styled';
-import { RegisterPageContainer, RegisterPageWrap, StyledNavLink } from './RegisterPage.styled';
+import { Img } from './LoginPage.styled';
+import {
+  RegisterPageContainer,
+  RegisterPageWrap,
+  StyledNavLink,
+  NavWrap,
+} from './RegisterPage.styled';
 import { selectIsLoggedInUser } from 'redux/auth/selectors';
 
 const LoginPage = () => {
   const isLoggedInUser = useSelector(selectIsLoggedInUser);
   const navigate = useNavigate();
-  console.log(isLoggedInUser);
 
-  useEffect(()=>{
-    if(isLoggedInUser){
-      navigate('/calendar/month');
+  useEffect(() => {
+    if (isLoggedInUser) {
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().slice(0, 10);
+      navigate(`/calendar/month/${formattedDate}`);
     }
-  },[isLoggedInUser, navigate])
+  }, [isLoggedInUser, navigate]);
+
   return (
     <RegisterPageContainer>
       <Img
         src={normalImage}
         srcSet={`${normalImage} 1x, ${retinaImage} 2x, ${superRetinaImage} 3x`}
-        alt='Goose in rocket'
+        alt="Goose in rocket"
       />
       <RegisterPageWrap>
         <LoginForm />
-        <StyledNavLink to={'/register'}>Sign Up</StyledNavLink>
+        <NavWrap>
+          <StyledNavLink to={'/register'}>Sign Up</StyledNavLink>
+          <AuthGoogle color="#3E85F3" />
+        </NavWrap>
       </RegisterPageWrap>
     </RegisterPageContainer>
   );

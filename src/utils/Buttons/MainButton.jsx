@@ -1,12 +1,10 @@
-import { CancelBtn } from './MainButton.styled';
+import { CancelBtn, IconPag, PeriodBtn } from './MainButton.styled';
 import {
   ListLink,
   AuthLink,
   MainBtn,
-  MonthDayBtn,
   SecondBtn,
   WrapperSecondBtn,
-  AddTaskBtn,
 } from '/MainButton.styled';
 import { CgLogIn } from 'react-icons/cg';
 
@@ -44,7 +42,9 @@ export const MainButton = () => {
         </MainBtn>
       </li>
       <li>
-        <MainBtn padding="50">Save changes</MainBtn>
+        <MainBtn padding="50" state="disactive">
+          Save changes
+        </MainBtn>
       </li>
       <li>
         <MainBtn style={{ width: '100%' }}>Save</MainBtn>
@@ -76,14 +76,12 @@ export const MainButton = () => {
         </SecondBtn>
       </li>
       <li>
-        <AddTaskBtn style={{ width: '100%' }}>
-          <CgLogIn style={{ marginLeft: 11, width: 24, height: 24 }} />
-          Add task
-        </AddTaskBtn>
-      </li>
-      <li>
-        <MonthDayBtn>Month</MonthDayBtn>
-        <MonthDayBtn swith="day">Day</MonthDayBtn>
+        <PeriodBtn>
+          <IconPag id="left" />
+        </PeriodBtn>
+        <PeriodBtn id="right">
+          <IconPag />
+        </PeriodBtn>
       </li>
     </ListLink>
   );

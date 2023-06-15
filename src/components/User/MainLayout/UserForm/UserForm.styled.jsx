@@ -1,9 +1,14 @@
 import styled from '@emotion/styled';
-import {  Form, ErrorMessage } from 'formik';
-import DatePicker from 'react-datepicker';
+import { Form } from 'formik';
+
 import 'react-datepicker/dist/react-datepicker.css';
-import { ReactComponent as Icon } from "images/svg/avatar.svg"
-import { ReactComponent as Plus } from "images/svg/plus.svg"
+
+import { ReactComponent as Icon } from 'images/svg/avatar.svg';
+import { ReactComponent as Plus } from 'images/svg/plus.svg';
+// import { ReactComponent as Arrow } from "images/svg/arrow-down.svg";
+
+import { themes } from 'styles/themes';
+import { device } from 'styles/mediaVeriables';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -12,25 +17,15 @@ export const Wrapper = styled.div`
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  height: 100%;
-  background: ${({ theme }) => theme.colors.white};
+  background: ${({ theme }) => theme.colors.backgroundUserForm};
   border-radius: 16px;
- 
-  h1 {
-    margin-top: 59px;
-    margin-bottom: 4px;
-    height: 18px;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 18px;
-    line-height: calc(18 / 14);
-    color: ${({ theme }) => theme.colors.black};
-    @media screen and (min-width: 768px) {
-      margin-bottom: 8px;
-      margin-top: 0px;
-      font-size: 18px;
-      line-height: calc(18 / 18);
-    }
+  padding: 59px 18px 40px;
+  @media ${device.tablet} {
+    padding: 40px 175px;
+    position: unset;
+  }
+  @media ${device.desktop} {
+    padding: 60px 164px;
   }
 `;
 
@@ -39,9 +34,7 @@ export const FormUser = styled(Form)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media screen and (min-width: 768px) {
-    position: unset;
-  }
+  width: 100%;
 `;
 
 export const ContainerImg = styled.div`
@@ -49,25 +42,16 @@ export const ContainerImg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  left: 115px;
-  top: -30px;
+  left: auto;
   width: 72px;
   height: 72px;
   border: 2px solid #3e85f3;
   border-radius: 50%;
   background: #ffffff;
-  @media screen and (min-width: 768px) {
+  @media ${device.tablet} {
     position: relative;
-    margin-top: 40px;
-    margin-bottom: 14px;
-    left: 0px;
-    top: 0px;
     width: 124px;
     height: 124px;
-  }
-  @media screen and (min-width: 1440px) {
-    margin-top: 60px;
-    margin-bottom: 20px;
   }
 `;
 
@@ -75,17 +59,18 @@ export const ImgAvatar = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 50%;
+  object-fit: cover;
+  object-position: 50% 50%;
 `;
 
 export const SvgAvatar = styled.div`
-display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   width: 48px;
   height: 48px;
   border-radius: 50%;
   color: ${({ theme }) => theme.colors.accent};
-  
 `;
 
 export const IconUser = styled(Icon)`
@@ -97,7 +82,7 @@ export const LabelImg = styled.label`
   position: absolute;
   left: 43px;
   top: 62px;
-  @media screen and (min-width: 768px) {
+  @media ${device.tablet} {
     left: 76px;
     top: 106px;
   }
@@ -109,291 +94,136 @@ export const AddBtn = styled(Plus)`
   border-radius: 50%;
   width: 14px;
   height: 14px;
-  @media screen and (min-width: 768px) {
+  @media ${device.tablet} {
     width: 24px;
     height: 24px;
+  }
+`;
+
+export const UserName = styled.h2`
+  margin-top: 85px;
+  font-weight: ${themes.fontWeight.b};
+  font-size: ${themes.fontSizes.s};
+  line-height: 1.3;
+  color: ${({ theme }) => theme.colors.iconPaginationActive};
+  @media ${device.tablet} {
+    margin-top: 20px;
+    font-size: ${themes.fontSizes.l};
+    line-height: 1;
+  }
+`;
+
+export const User = styled.p`
+  margin-top: 4px;
+  font-weight: ${themes.fontWeight.sb};
+  font-size: ${themes.fontSizes.xs};
+  line-height: 1.2;
+  color: ${({ theme }) => theme.colors.textAndIconTodo};
+  @media ${device.tablet} {
+    margin-top: 8px;
+    font-size: ${themes.fontSizes.s};
+    line-height: 1.3;
+  }
+`;
+
+export const BlockInput = styled.ul`
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 18px;
+  margin-bottom: 40px;
+  width: 100%;
+  @media ${device.tablet} {
+    grid-gap: 24px;
+  }
+  @media screen and (max-width: 1440px) {
+    grid-template-columns: 1fr;
+  }
+  @media screen and (min-width: 1440px) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 50px;
   }
 `;
 
 export const InputFile = styled.input`
   opacity: 0;
   height: 0;
-  width: 0;
+  width: 100%;
   line-height: 0;
   overflow: hidden;
   padding: 0;
   margin: 0;
 `;
 
-export const User = styled.p`
-  margin-bottom: 40px;
-  font-style: normal;
+// export const StyledErrorMessage = styled.div `
+// font-weight: 400;
+//   font-size: 12px;
+//   line-height: 1.17;
+// color: #DA1414;
+// display: flex;
+// flex-direction: column;
+//position: absolute;
+//margin-top: -12px;
+//margin-left: auto;
+//margin-right: auto;
+//padding-left: 18px;
+//overflow: hidden;
+//color: #DA1414;
+//border: 0.15em solid #DA1414; => input
+//white-space: nowrap;
+//letter-spacing: 0.08em;
+//
+//@media screen and (min-width: 768px) {
+//  margin-top: -16px;
+//}
+//
+//@media screen and (min-width: 1440px) {
+//  margin-top: -19px;
+//}
+// `
+
+// export const ArrowDown = styled(Arrow)`
+//  position: absolute;
+//  width: 20px;
+//  height: 20px;
+// top: 50%;
+// left: 88%;
+// cursor: pointer;
+// &:hover {
+//   color: ${themes.colors.textCancelBtnIntodo};
+// }
+
+// @media ${device.tablet} {
+//    width: 25px;
+//  height: 25px;
+//   top: 50%;
+// }
+// @media ${device.desktop} {
+//    width: 25px;
+//  height: 25px;
+//   top: 50%;
+//   left: 88%;
+// }
+// `;
+
+export const ChangePasswordBtn = styled.button`
+  height: 100%;
+  width: auto;
+  color: ${({ theme }) => theme.colors.accent};
   font-weight: 600;
-  font-size: 12px;
-  line-height: calc(14 / 12);
-  color: ${({ theme }) => theme.colors.black};
-  @media screen and (min-width: 768px) {
-    font-size: 14px;
-    line-height: calc(18 / 14);
-  }
-  @media screen and (min-width: 1440px) {
-    margin-bottom: 44px;
-  }
-`;
-
-export const BlockInput = styled.div`
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  width: 299px;
-  height: 392px;
-  margin-bottom: 80px;
-
-  p {
-    margin-bottom: 8px;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: calc(18 / 14);
-  }
-  
-  @media screen and (min-width: 768px) {
-    width: 354px;
-    height: 458px;
-    justify-content: space-between;
-  }
-  @media screen and (min-width: 1440px) {
-    width: 758px;
-    height: 264px;
-  }
-`;
-
-export const LabelInput = styled.label`
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
+  font-family: inherit;
+  transition: transform 0.2s;
   font-size: 14px;
-  line-height: calc(18 / 14);
-  color: ${({ theme }) => theme.colors.borderInputActive};
-  height: auto;
-`;
-
-
-
-export const Input = styled.input`
-    box-sizing: border-box;
-    width: 354px;
-    height: 46px;
-    padding: 14px;
-    margin-top: 8px;
-    background-color: ${({theme}) => (theme.colors.white)};
-    color: ${({theme}) => (theme.colors.borderInputActive)};
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 18px;
-    border: 1px solid;
-    border-color: ${({valid, theme}) => {
-        switch (valid) {
-            case true:
-                return theme.colors.saccess;
-            case false:
-                return theme.colors.failed;
-            default:
-                return theme.colors.borderInput;
-        }           
-    }};
-    border-radius: 8px;
-
-    :focus {
-        border: 1px solid ${({theme}) => (theme.colors.borderInputActive)};
-    }
-
-    @media screen and (min-width: ${({theme}) => (theme.breakpoints.m)}) {
-        height: 54px;
-        padding: 18px;
-        font-size: 16px;
-        line-height: 18px;
-    }
-`;
-
-export const InputWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`
-export const InputContainer = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: column;
-`;
-
-export const StyledErrorMessage = styled(ErrorMessage) `
-  /* position: absolute; */
-  /* top: 50px; */
-font-weight: 400;
-font-size: 10px;
-line-height: 14px;
-color: #DA1414;
-display: "flex";
-flex-direction: "column";
-
-`
-
-export const DatePickerWrap = styled.div`
-  .react-datepicker {
-    border-radius: 16px;
-    overflow: hidden;
-    border: none;
-    &__header {
-      background-color: ${({ theme }) => theme.colors.accent};
-      color: ${({ theme }) => theme.colors.white};
-    }
-    &__month-container {
-      background-color: ${({ theme }) => theme.colors.accent};
-    }
-    &__day {
-      color: ${({ theme }) => theme.colors.white};
-      &:hover {
-          border-radius: 50%;
-          background-color: ${({ theme }) => theme.colors.ligthBlue};
-          color: ${({ theme }) => theme.colors.accent};
-          opacity: 0.7;
-          
-        }
-      &--weekend {
-        opacity: 40%;
-      }
-      &--today {
-        border-radius: 50%;
-        opacity: 1;
-        background-color: ${({ theme }) => theme.colors.white};
-        color: ${({ theme }) => theme.colors.accent};
-        
-      }
-      &--selected {
-        border-radius: 50%;
-        opacity: 1;
-        background-color: ${({ theme }) => theme.colors.ligthBlue};
-        color: ${({ theme }) => theme.colors.accent};
-        outline: none;
-      }
-      &--keyboard-selected {
-        border-radius: 50%;
-        opacity: 1;
-        background-color: ${({ theme }) => theme.colors.ligthBlue};
-        color: ${({ theme }) => theme.colors.accent};
-        outline: none;
-      }
-    }
-    &__day-name {
-      color: ${({ theme }) => theme.colors.white};
-    }
-    &__current-month {
-      color: ${({ theme }) => theme.colors.white};
-    }
-    &__year {
-      
-    }
-    &__navigation--years {
-      background-color: ${({ theme }) => theme.colors.ligthBlue};
-      border-radius: 50%;
-      width: 10px;
-      height: 10px;
-      margin: 5px auto;
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.accent};
-        border: 1px solid ${({ theme }) => theme.colors.white};
-      }
-      
-    }
-    &__year-option {
-      background-color: ${({ theme }) => theme.colors.accent};
-      color: var(--mainWhite);
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.accent};
-        font-size:14px;
-        font-weight: 700;
-      }      
-    }
-    &__year-dropdown {
-      background-color: ${({ theme }) => theme.colors.accent};
-      &::-webkit-scrollbar {
-        width: 5px;
-    background: ${({ theme }) => theme.colors.accent};
-    border-radius: 12px;
-    
-  }
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.ligthBlue};
-    border-radius: 12px;
-
-  }
-    }
-  }
-`;
-
-export const StyledDatePicker = styled(DatePicker)`
-  width: 299px;
-  height: 42px;
-  margin-bottom: 18px;
-  padding-left: 18px;
-  border: 1px solid #FAFAFA;
-  border-radius: 8px;
-  background: transparent;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: calc(18 / 14);
-  color: ${({ theme }) => theme.colors.black};
-  @media screen and (min-width: 768px) {
-    width: 354px;
-    height: 46px;
-    margin-bottom: 24px;
-    font-size: 16px;
-    line-height: calc(18 / 16);
-  }
-
-  &:focus {
-      border-color: ${({ theme }) => theme.colors.accent};
-      outline: none;
-    }
-`;
-
-
-
-export const BtnSubmit = styled.button`
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0;
-  width: 195px;
-  height: 46px;
-  border-radius: 16px;
-  border: none;
+  line-height: 18px;
+  border-radius: 4px;
+  border-width: 0;
+  padding-top: 20px;
   cursor: pointer;
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: calc(18 / 14);
-  background: ${({ theme }) => theme.colors.accent};
-  color: ${({ theme }) => theme.colors.white};
-  cursor: pointer;
-  @media screen and (min-width: 768px) {
-    width: 262px;
-    height: 48px;
-    margin-top: 22px;
-    margin-bottom: 60px;
-  }
-  @media screen and (min-width: 1440px) {
-  }
- :hover {
-        background-color: ${({theme}) => (theme.colors.hovered)};
-    }
-  &:active {
-    filter: blur(0.1rem);
+  text-decoration: underline;
+  &:hover {
+    transform: scale(1.5);
   }
 `;
+
 
 
